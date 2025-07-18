@@ -1,7 +1,7 @@
 {
   "extends": "./jsconfig.json",
   "vueCompilerOptions": {
-    "target": 3,
+    "target": 3
     // "globalTypes": ["./types/vue.d.ts"]
   }
 }
