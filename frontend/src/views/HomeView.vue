@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import { ref, computed } from "vue";
 
 const allNews = ref([
@@ -31,7 +31,35 @@ const paginatedNews = computed(() =>
     currentPage.value * pageSize
   )
 );
+</script> -->
+
+<script setup>
+import { ref, computed, onMounted } from "vue";
+import axios from "axios";
+
+const allNews = ref([]);
+const currentPage = ref(1);
+const pageSize = 2;
+
+const totalPages = computed(() => Math.ceil(allNews.value.length / pageSize));
+
+const paginatedNews = computed(() =>
+  allNews.value.slice(
+    (currentPage.value - 1) * pageSize,
+    currentPage.value * pageSize
+  )
+);
+
+onMounted(async () => {
+  try {
+    const response = await axios.get("http://127.0.0.1:8000/api/news");
+    allNews.value = response.data;
+  } catch (error) {
+    console.error("Ошибка при загрузке новостей:", error);
+  }
+});
 </script>
+
 
 <template>
   <div class="container mx-auto px-4 py-6">
