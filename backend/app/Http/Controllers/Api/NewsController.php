@@ -26,5 +26,18 @@ class NewsController extends Controller
         $news->increment('likes'); // +1 лайк
         return response()->json(['likes' => $news->likes]);
     }
+    public function destroy($id)
+    {
+    $news = News::findOrFail($id);
+    $news->delete();
+
+    return response()->json(['message' => 'News deleted']);
+    }
+    public function store(Request $request)
+    {
+    $news = News::create($request->all());
+    return response()->json($news, 201);
+    }
+
 }
 

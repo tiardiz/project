@@ -22,6 +22,11 @@ class CommentController extends Controller
 
         return response()->json($comment, 201);
     }
+    
+    public function index($newsId)
+    {
+        return Comment::where('news_id', $newsId)->get();
+    }
 
     public function destroy($id)
     {
