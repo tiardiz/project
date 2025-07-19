@@ -1,0 +1,7 @@
+back: composer install
+cp .env.example .env
+php artisan serve
+front:npm install
+npm install axios
+node -v
+npm run serve

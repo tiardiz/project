@@ -1,4 +1,0 @@
-back: php artisan serve
-front: npm install
-node -v
-npm run serve
