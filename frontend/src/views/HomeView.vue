@@ -43,7 +43,7 @@ const addNews = async () => {
     errorMessage.value = "";
     await axios.post("http://127.0.0.1:8000/api/news", newNews.value);
     newNews.value = { title: "", body: "", image: "" };
-    await fetchNews(); // обновляем список новостей
+    await fetchNews();
   } catch (error) {
     console.error("Ошибка при добавлении новости:", error);
     errorMessage.value = "Не удалось добавить новость.";
@@ -68,12 +68,20 @@ const goToNews = (id) => {
 };
 
 
+// const likeNews = async (id) => {
+//   try {
+//     const response = await axios.post(`http://127.0.0.1:8000/api/news/${id}/like`);
+//     const updatedLikes = response.data.likes;
+//     const item = allNews.value.find(n => n.id === id);
+//     if (item) item.likes = updatedLikes;
+//   } catch (error) {
+//     console.error("Ошибка при лайке:", error);
+//   }
+// };
 const likeNews = async (id) => {
   try {
-    const response = await axios.post(`http://127.0.0.1:8000/api/news/${id}/like`);
-    const updatedLikes = response.data.likes;
-    const item = allNews.value.find(n => n.id === id);
-    if (item) item.likes = updatedLikes;
+    await axios.post(`http://127.0.0.1:8000/api/news/${id}/like`);
+    fetchNews(); // обновить список после лайка
   } catch (error) {
     console.error("Ошибка при лайке:", error);
   }
@@ -130,7 +138,8 @@ const likeNews = async (id) => {
       <div
         v-for="news in paginatedNews"
         :key="news.id"
-        class="bg-white rounded-2xl shadow-md overflow-hidden relative group cursor-pointer"
+        class="bg-white rounded-2xl shadow-md overflow-hidden relative group cursor-pointer flex flex-col"
+        style="height: 350px"
         @click="goToNews(news.id)"
       >
         <img
@@ -138,32 +147,36 @@ const likeNews = async (id) => {
           alt="news image"
           class="w-full h-48 object-cover"
         >
-        <div class="p-4">
-          <h3 class="text-xl font-semibold text-gray-900 mb-2">
-            {{ news.title }}
-          </h3>
-          <p class="text-gray-700 text-sm">
-            {{ news.body }}
-          </p>
+        <div class="p-4 flex-1 flex flex-col justify-between">
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">
+              {{ news.title }}
+            </h3>
+            <p
+              class="text-gray-700 text-sm overflow-hidden line-clamp-3"
+            >
+              {{ news.body }}
+            </p>
+          </div>
+
+          <!-- Лайки и просмотры -->
+          <div class="flex justify-between items-center mt-4 text-sm text-gray-500">
+            <span>👁 {{ news.views }}</span>
+            <button @click.stop="likeNews(news.id)">
+              ❤️ {{ news.likes }}
+            </button>
+          </div>
         </div>
+
         <button
           class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-md text-xs opacity-0 group-hover:opacity-100"
           @click.stop="deleteNews(news.id)"
         >
           Удалить
         </button>
-        <!-- Под заголовком и текстом -->
-        <div class="flex justify-between items-center mt-2 text-sm text-gray-600">
-          <span>👁 {{ news.views }} просмотров</span>
-          <button
-            class="text-blue-600 hover:underline"
-            @click.stop="likeNews(news.id)"
-          >
-            ❤️ {{ news.likes }} лайков
-          </button>
-        </div>
       </div>
     </div>
+
 
     <!-- Пагинация -->
     <div class="flex justify-center mt-8 space-x-2">
