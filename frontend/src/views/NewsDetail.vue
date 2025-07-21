@@ -57,37 +57,55 @@ const deleteComment = async (commentId) => {
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-6" v-if="newsItem">
-    <h2 class="text-3xl font-bold text-gray-800 mb-4">{{ newsItem.title }}</h2>
-    <img :src="newsItem.image" alt="News Image" class="w-full h-64 object-cover mb-4" />
-    <p class="text-gray-700 mb-6">{{ newsItem.text }}</p>
+  <div
+    v-if="newsItem"
+    class="container mx-auto px-4 py-6"
+  >
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">
+      {{ newsItem.title }}
+    </h2>
+    <img
+      :src="newsItem.image"
+      alt="News Image"
+      class="w-full h-64 object-cover mb-4"
+    >
+    <p class="text-gray-700 mb-6">
+      {{ newsItem.text }}
+    </p>
 
     <div class="bg-gray-100 p-4 rounded-md">
-      <h3 class="text-lg font-semibold mb-2">Комментарии:</h3>
+      <h3 class="text-lg font-semibold mb-2">
+        Комментарии:
+      </h3>
       <ul class="space-y-2 mb-4">
         <li
-  v-for="comment in comments"
-  :key="comment.id"
-  class="text-sm text-gray-800 border-b pb-1 flex justify-between items-center"
->
-  <span>{{ comment.content }}</span>
-  <button
-    @click="deleteComment(comment.id)"
-    class="text-red-500 text-xs hover:underline"
-  >
-    удалить
-  </button>
-</li>
-
+          v-for="comment in comments"
+          :key="comment.id"
+          class="text-sm text-gray-800 border-b pb-1 flex justify-between items-center"
+        >
+          <span>{{ comment.content }}</span>
+          <button
+            class="text-red-500 text-xs hover:underline"
+            @click="deleteComment(comment.id)"
+          >
+            удалить
+          </button>
+        </li>
       </ul>
 
-      <form @submit.prevent="addComment" class="flex gap-2">
+      <form
+        class="flex gap-2"
+        @submit.prevent="addComment"
+      >
         <input
           v-model="newComment"
           placeholder="Ваш комментарий"
           class="flex-1 p-2 border rounded-md"
-        />
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md">
+        >
+        <button
+          type="submit"
+          class="bg-blue-600 text-white px-4 py-2 rounded-md"
+        >
           Отправить
         </button>
       </form>

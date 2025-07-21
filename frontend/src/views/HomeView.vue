@@ -83,94 +83,102 @@ const likeNews = async (id) => {
 
 <template>
   <div class="container mx-auto px-4 py-6">
-    <h2 class="text-3xl font-bold text-gray-800 mb-6">News:</h2>
-<!-- Добавление новости -->
-<form
-  @submit.prevent="addNews"
-  class="mb-6 space-y-4 bg-gray-100 p-4 rounded-md"
->
-  <div v-if="errorMessage" class="text-red-500 text-sm">{{ errorMessage }}</div>
-
-  <input
-    v-model="newNews.title"
-    placeholder="Title"
-    class="w-full p-2 border rounded-md"
-    required
-  />
-  <textarea
-    v-model="newNews.body"
-    placeholder="Text"
-    class="w-full p-2 border rounded-md"
-    required
-  ></textarea>
-  <input
-    v-model="newNews.image"
-    placeholder="Image URL"
-    class="w-full p-2 border rounded-md"
-  />
-  <button
-    type="submit"
-    class="bg-blue-600 text-white px-4 py-2 rounded-md"
-    :disabled="isLoading"
-  >
-    {{ isLoading ? "Добавление..." : "Добавить новость" }}
-  </button>
-</form>
-
-
-<!-- Список новостей -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-  <div
-    v-for="news in paginatedNews"
-    :key="news.id"
-    class="bg-white rounded-2xl shadow-md overflow-hidden relative group cursor-pointer"
-    @click="goToNews(news.id)"
-  >
-    <img
-      :src="news.image"
-      alt="news image"
-      class="w-full h-48 object-cover"
-    />
-    <div class="p-4">
-      <h3 class="text-xl font-semibold text-gray-900 mb-2">
-        {{ news.title }}
-      </h3>
-      <p class="text-gray-700 text-sm">{{ news.body }}</p>
-    </div>
-    <button
-      @click.stop="deleteNews(news.id)"
-      class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-md text-xs opacity-0 group-hover:opacity-100"
+    <h2 class="text-3xl font-bold text-gray-800 mb-6">
+      News:
+    </h2>
+    <!-- Добавление новости -->
+    <form
+      class="mb-6 space-y-4 bg-gray-100 p-4 rounded-md"
+      @submit.prevent="addNews"
     >
-      Удалить
-    </button>
-    <!-- Под заголовком и текстом -->
-<div class="flex justify-between items-center mt-2 text-sm text-gray-600">
-  <span>👁 {{ news.views }} просмотров</span>
-  <button
-    @click.stop="likeNews(news.id)"
-    class="text-blue-600 hover:underline"
-  >
-    ❤️ {{ news.likes }} лайков
-  </button>
-</div>
-  </div>
-</div>
+      <div
+        v-if="errorMessage"
+        class="text-red-500 text-sm"
+      >
+        {{ errorMessage }}
+      </div>
 
-<!-- Пагинация -->
-<div class="flex justify-center mt-8 space-x-2">
-  <button
-    v-for="page in totalPages"
-    :key="page"
-    @click="currentPage = page"
-    class="px-4 py-2 rounded-md border border-gray-300"
-    :class="{
-      'bg-blue-600 text-white': currentPage === page,
-      'hover:bg-gray-200': currentPage !== page,
-    }"
-  >
-    {{ page }}
-  </button>
-</div>
+      <input
+        v-model="newNews.title"
+        placeholder="Title"
+        class="w-full p-2 border rounded-md"
+        required
+      >
+      <textarea
+        v-model="newNews.body"
+        placeholder="Text"
+        class="w-full p-2 border rounded-md"
+        required
+      />
+      <input
+        v-model="newNews.image"
+        placeholder="Image URL"
+        class="w-full p-2 border rounded-md"
+      >
+      <button
+        type="submit"
+        class="bg-blue-600 text-white px-4 py-2 rounded-md"
+        :disabled="isLoading"
+      >
+        {{ isLoading ? "Добавление..." : "Добавить новость" }}
+      </button>
+    </form>
 
+
+    <!-- Список новостей -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        v-for="news in paginatedNews"
+        :key="news.id"
+        class="bg-white rounded-2xl shadow-md overflow-hidden relative group cursor-pointer"
+        @click="goToNews(news.id)"
+      >
+        <img
+          :src="news.image"
+          alt="news image"
+          class="w-full h-48 object-cover"
+        >
+        <div class="p-4">
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">
+            {{ news.title }}
+          </h3>
+          <p class="text-gray-700 text-sm">
+            {{ news.body }}
+          </p>
+        </div>
+        <button
+          class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-md text-xs opacity-0 group-hover:opacity-100"
+          @click.stop="deleteNews(news.id)"
+        >
+          Удалить
+        </button>
+        <!-- Под заголовком и текстом -->
+        <div class="flex justify-between items-center mt-2 text-sm text-gray-600">
+          <span>👁 {{ news.views }} просмотров</span>
+          <button
+            class="text-blue-600 hover:underline"
+            @click.stop="likeNews(news.id)"
+          >
+            ❤️ {{ news.likes }} лайков
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Пагинация -->
+    <div class="flex justify-center mt-8 space-x-2">
+      <button
+        v-for="page in totalPages"
+        :key="page"
+        class="px-4 py-2 rounded-md border border-gray-300"
+        :class="{
+          'bg-blue-600 text-white': currentPage === page,
+          'hover:bg-gray-200': currentPage !== page,
+        }"
+        @click="currentPage = page"
+      >
+        {{ page }}
+      </button>
+    </div>
   </div>
 </template>

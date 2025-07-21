@@ -1,7 +1,15 @@
-back: composer install
+back: php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php composer-setup.php
+php -r "unlink('composer-setup.php');" в терминалк!!!
+composer install
 cp .env.example .env
+php artisan key:generate
+php artisan migrate
 php artisan serve
+
 front:npm install
-npm install axios
 node -v
 npm run serve
+
+если есть ошибка с форматом кода:
+npm run lint -- --fix
