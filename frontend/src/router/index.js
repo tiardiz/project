@@ -13,6 +13,11 @@ const routes = [
     name: "NewsDetail",
     component: () => import("../views/NewsDetail.vue"),
   },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: () => import("@/views/NotFoundView.vue"),
+  },
 ];
 
 const router = createRouter({
