@@ -8,7 +8,7 @@ const allNews = ref([]);
 const currentPage = ref(1);
 const pageSize = 9;
 
-const newNews = ref({ title: "", body: "", image: "" });
+const newNews = ref({ title: "", body: "", image: "", author: "" });
 
 const totalPages = computed(() => Math.ceil(allNews.value.length / pageSize));
 const paginatedNews = computed(() =>
@@ -33,8 +33,8 @@ const isLoading = ref(false);
 const errorMessage = ref("");
 
 const addNews = async () => {
-  if (!newNews.value.title || !newNews.value.body) {
-    errorMessage.value = "Заполните заголовок и текст.";
+  if (!newNews.value.title || !newNews.value.body || !newNews.value.author || !newNews.value.image) {
+    errorMessage.value = "Заполните все поля.";
     return;
   }
 
@@ -67,17 +67,6 @@ const goToNews = (id) => {
   router.push(`/news/${id}`);
 };
 
-
-// const likeNews = async (id) => {
-//   try {
-//     const response = await axios.post(`http://127.0.0.1:8000/api/news/${id}/like`);
-//     const updatedLikes = response.data.likes;
-//     const item = allNews.value.find(n => n.id === id);
-//     if (item) item.likes = updatedLikes;
-//   } catch (error) {
-//     console.error("Ошибка при лайке:", error);
-//   }
-// };
 const likeNews = async (id) => {
   try {
     await axios.post(`http://127.0.0.1:8000/api/news/${id}/like`);
@@ -119,6 +108,13 @@ const likeNews = async (id) => {
         required
       />
       <input
+        v-model="newNews.author"
+        placeholder="Author"
+        class="w-full p-2 border rounded-md"
+        required
+      >
+
+      <input
         v-model="newNews.image"
         placeholder="Image URL"
         class="w-full p-2 border rounded-md"
@@ -139,7 +135,7 @@ const likeNews = async (id) => {
         v-for="news in paginatedNews"
         :key="news.id"
         class="bg-white rounded-2xl shadow-md overflow-hidden relative group cursor-pointer flex flex-col"
-        style="height: 350px"
+        style="height: 380px"
         @click="goToNews(news.id)"
       >
         <img
@@ -161,9 +157,37 @@ const likeNews = async (id) => {
 
           <!-- Лайки и просмотры -->
           <div class="flex justify-between items-center mt-4 text-sm text-gray-500">
-            <span>👁 {{ news.views }}</span>
-            <button @click.stop="likeNews(news.id)">
-              ❤️ {{ news.likes }}
+            <span class="inline-flex items-center gap-1">
+              <svg
+                class="w-6 h-6 text-gray-800 dark:text-white"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.998 7.78C6.729 6.345 9.198 5 12 5c2.802 0 5.27 1.345 7.002 2.78a12.713 12.713 0 0 1 2.096 2.183c.253.344.465.682.618.997.14.286.284.658.284 1.04s-.145.754-.284 1.04a6.6 6.6 0 0 1-.618.997 12.712 12.712 0 0 1-2.096 2.183C17.271 17.655 14.802 19 12 19c-2.802 0-5.27-1.345-7.002-2.78a12.712 12.712 0 0 1-2.096-2.183 6.6 6.6 0 0 1-.618-.997C2.144 12.754 2 12.382 2 12s.145-.754.284-1.04c.153-.315.365-.653.618-.997A12.714 12.714 0 0 1 4.998 7.78ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+                  clip-rule="evenodd"
+                />
+              </svg> {{ news.views }}</span>
+            <button
+              class="inline-flex items-center gap-1"
+              @click.stop="likeNews(news.id)"
+            >
+              <svg
+                class="w-6 h-6 text-gray-800 dark:text-white"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="m12.75 20.66 6.184-7.098c2.677-2.884 2.559-6.506.754-8.705-.898-1.095-2.206-1.816-3.72-1.855-1.293-.034-2.652.43-3.963 1.442-1.315-1.012-2.678-1.476-3.973-1.442-1.515.04-2.825.76-3.724 1.855-1.806 2.201-1.915 5.823.772 8.706l6.183 7.097c.19.216.46.34.743.34a.985.985 0 0 0 .743-.34Z" />
+              </svg> {{ news.likes }}
             </button>
           </div>
         </div>
