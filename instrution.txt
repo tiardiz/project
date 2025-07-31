@@ -7,9 +7,11 @@ enter: CREATE DATABASE project;
 load bd: mysql -u root project < db/backup.sql
 
 
-back: php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+back: 
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 php composer-setup.php
-php -r "unlink('composer-setup.php');" в терминалк!!!
+php -r "unlink('composer-setup.php');"
+
 composer install
 cp .env.example .env    
 php artisan key:generate
